@@ -1,2 +1,2 @@
-# analysis-pipeline
-A comprehensive Python-based data analytics pipeline for data exploration, visualization, statistical analysis, and machine learning, designed for academic and professional applications.
+# Data Analysis Pipeline
+Goal: Create a generic pipeline that can clean, explore, visualize, perform statistical analysic, and create ML models on a wide range of datasets and sources.
