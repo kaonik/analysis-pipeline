@@ -1,5 +1,6 @@
 import pandas as pd
 import psycopg2
+import requests
 
 def load_csv(file_path):
     """Load csv file into a pandas dataframe"""
@@ -16,4 +17,15 @@ def load_from_postgres(dbname, user, password, host, port, query):
             return pd.read_sql_query(query, conn)
     except psycopg2.Error as e:
         print(f'Database error: {e}')
+        return None
+    
+def load_from_api(url):
+    ''' Load data from an API into a pandas dataframe'''
+    try:
+        response = requests.get(url)
+        response.raise_for_status() # Raise HTTPError for bad requests
+        data = response.json()
+        return pd.DataFrame(data)
+    except requests.RequestException as e:
+        print(f'Request error: {e}')
         return None
