@@ -10,7 +10,7 @@ def load_csv(file_path):
         print("File not found")
         return None
     
-def load_from_postgres(dbname, user, password, host, port, query):
+def load_from_postgres(dbname, user, password, host, query, port=5432):
     ''' Load data from postgres database into a pandas dataframe'''
     try:
         with psycopg2.connect(dbname=dbname, user=user, password=password, host=host, port=port) as conn:
