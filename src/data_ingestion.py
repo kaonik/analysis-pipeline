@@ -1,5 +1,5 @@
 import pandas as pd
-import psycopg2
+from sqlalchemy import create_engine
 import requests
 
 def load_csv(file_path):
@@ -11,12 +11,16 @@ def load_csv(file_path):
         return None
     
 def load_from_postgres(dbname, user, password, host, query, port=5432):
-    ''' Load data from postgres database into a pandas dataframe'''
+    """Load data from a PostgreSQL database using SQLAlchemy."""
     try:
-        with psycopg2.connect(dbname=dbname, user=user, password=password, host=host, port=port) as conn:
+        # Create an SQLAlchemy engine
+        engine = create_engine(f'postgresql://{user}:{password}@{host}:{port}/{dbname}')
+        
+        # Use the engine to execute the query and load into DataFrame
+        with engine.connect() as conn:
             return pd.read_sql_query(query, conn)
-    except psycopg2.Error as e:
-        print(f'Database error: {e}')
+    except Exception as e:
+        print(f"Database error: {e}")
         return None
     
 def load_from_api(url):
