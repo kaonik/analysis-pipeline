@@ -28,8 +28,7 @@ def load_from_api(url):
     try:
         response = requests.get(url)
         response.raise_for_status() # Raise HTTPError for bad requests
-        data = response.json()
-        return pd.DataFrame(data)
+        return response.json() # Return json response
     except requests.RequestException as e:
         print(f'Request error: {e}')
         return None
