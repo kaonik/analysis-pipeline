@@ -31,14 +31,22 @@ class DataCleaner:
         return self.df
     
     # --- Dealing with Duplicates ---
-    def print_duplicate_rows(self, columns=None):
-        """Print duplicate rows in the DataFrame"""
+    def print_duplicate_rows(self, columns=None, max_print_rows=100):
+        """Print or write duplicate rows in the DataFrame to a file"""
         duplicates = self.df[self.df.duplicated(subset=columns)]
         if not duplicates.empty:
-            print('Duplicate Rows:')
-            print(duplicates)
+            if duplicates.shape[0] <= max_print_rows:
+                print('Duplicate Rows:')
+                print(duplicates)
+            else:
+                duplicates.to_csv('duplicates.csv', index=False)
+                print(f'Duplicate rows written to duplicates.csv')
         else:
             print('No duplicate rows found')
-        
+
+    def drop_duplicate_rows(self, columns=None):
+        """Drop duplicate rows in the DataFrame"""
+        self.df.drop_duplicates(subset=columns, inplace=True)
+        return self.df
 
     
