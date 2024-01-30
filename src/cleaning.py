@@ -29,5 +29,16 @@ class DataCleaner:
                 print('Invalid imputation strategy')
                 return None
         return self.df
+    
+    # --- Dealing with Duplicates ---
+    def print_duplicate_rows(self, columns=None):
+        """Print duplicate rows in the DataFrame"""
+        duplicates = self.df[self.df.duplicated(subset=columns)]
+        if not duplicates.empty:
+            print('Duplicate Rows:')
+            print(duplicates)
+        else:
+            print('No duplicate rows found')
+        
 
     
