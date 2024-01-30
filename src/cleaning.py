@@ -5,7 +5,6 @@ class DataCleaner:
         """Initialize with a DataFrame"""
         self.df = df
 
-
     # --- Handle Missing Data ---
     def drop_missing_rows(self):
         """Drop rows with missing values"""
@@ -29,5 +28,6 @@ class DataCleaner:
             else:
                 print('Invalid imputation strategy')
                 return None
+        return self.df
 
     
