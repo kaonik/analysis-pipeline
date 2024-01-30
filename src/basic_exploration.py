@@ -5,6 +5,16 @@ import seaborn as sns
 def basic_data_exploration(df):
     '''Perform basic data exploration on a DataFrame'''
 
+    # Check if df is a DataFrame before proceeding
+    if not isinstance(df, pd.DataFrame):
+        print('Not a DataFrame')
+        return None
+    
+    # Check if df is empty before proceeding
+    if df.empty:
+        print('Empty DataFrame')
+        return None
+
     print('Dataset Overview')
     print('----------------')
     print(f'Shape: {df.shape}')
