@@ -9,6 +9,9 @@ def load_csv(file_path):
     except FileNotFoundError:
         print("File not found")
         return None
+    except pd.errors.EmptyDataError:
+        print("Empty file")
+        return None
     
 def load_from_postgres(dbname, user, password, host, query, port=5432):
     """Load data from a PostgreSQL database using SQLAlchemy."""
