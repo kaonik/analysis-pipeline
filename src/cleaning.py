@@ -44,7 +44,7 @@ class DataCleaner:
         else:
             print('No duplicate rows found')
 
-    def drop_duplicate_rows(self, columns=None):
+    def remove_duplicates(self, columns=None):
         """Drop duplicate rows in the DataFrame"""
         self.df.drop_duplicates(subset=columns, inplace=True)
         return self.df
