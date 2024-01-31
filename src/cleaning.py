@@ -145,11 +145,9 @@ class DataCleaner:
             if self.df[col].dtype in [np.float64, np.int64]:
                 col_mean = self.df[col].mean()
                 col_std = self.df[col].std()
-
                 # Calculate lower and upper bounds
                 lower_bound = col_mean - 3 * col_std
                 upper_bound = col_mean + 3 * col_std
-
                 # Cap outliers
                 self.df[col] = self.df[col].clip(lower_bound, upper_bound)
         return self.df
