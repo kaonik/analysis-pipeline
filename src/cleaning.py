@@ -69,4 +69,27 @@ class DataCleaner:
             self.df[col] = self.df[col].astype('category')
         return self.df
     
+    # --- Handle Outliers ---
+    def _calculate_iqr_bounds(self, column):
+        """Calculate the lower and upper bounds for outliers"""
+        q1 = self.df[column].quantile(0.25)
+        q3 = self.df[column].quantile(0.75)
+        iqr = q3 - q1
+        lower_bound = q1 - 1.5 * iqr
+        upper_bound = q3 + 1.5 * iqr
+        return lower_bound, upper_bound
     
+    def print_outliers_iqr(self, columns):
+        """Print outliers in specified columns using IQR method"""
+        outliers = {}
+        # Calculate lower and upper bounds for each column
+        for col in columns:
+            lower_bound, upper_bound = self._calculate_iqr_bounds(col)
+            outliers_in_col = self.df[(self.df[col] < lower_bound) | (self.df[col] > upper_bound)]
+            # Add outliers to dictionary
+            if not outliers_in_col.empty:
+                outliers[col] = outliers_in_col
+        # Print outliers
+        for col, outliers_in_col in outliers.items():
+            print(f'Outliers in {col}:')
+            print(outliers_in_col)
