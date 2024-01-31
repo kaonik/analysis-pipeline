@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 
 class DataCleaner:
     def __init__(self, df):
@@ -70,6 +71,8 @@ class DataCleaner:
         return self.df
     
     # --- Handle Outliers ---
+
+    # IQR method
     def _calculate_iqr_bounds(self, column):
         """Calculate the lower and upper bounds for outliers"""
         q1 = self.df[column].quantile(0.25)
@@ -106,4 +109,47 @@ class DataCleaner:
         for col in columns:
             lower_bound, upper_bound = self._calculate_iqr_bounds(col)
             self.df[col] = self.df[col].clip(lower_bound, upper_bound)
+        return self.df
+    
+    # Z-score method
+    def print_outliers_zscore(self,columns):
+        """Print outliers in specified columns using z-score method"""
+        outliers = {}
+        for col in columns:
+            # Check if column is numeric and calculate z-scores
+            if self.df[col].dtype in [np.float64, np.int64]:
+                z_scores = (self.df[col] - self.df[col].mean()) / self.df[col].std()
+                outliers_in_col = self.df[np.abs(z_scores) > 3]
+                # Add outliers to dictionary if any
+                if not outliers_in_col.empty:
+                    outliers[col] = outliers_in_col
+
+        # Print outliers
+        for col, outliers_in_col in outliers.items():
+            print(f'Outliers in {col}:')
+            print(outliers_in_col)
+
+    def remove_outliers_zscore(self, columns):
+        """Remove outliers in specified columns using z-score method"""
+        for col in columns:
+            # Check if column is numeric and calculate z-scores
+            if self.df[col].dtype in [np.float64, np.int64]:
+                z_scores = (self.df[col] - self.df[col].mean()) / self.df[col].std()
+                self.df = self.df[np.abs(z_scores) <= 3]
+        return self.df
+    
+    def cap_outliers_zscore(self, columns):
+        """Cap outliers in specified columns using z-score method"""
+        for col in columns:
+            # Check if column is numeric and calculate z-scores
+            if self.df[col].dtype in [np.float64, np.int64]:
+                col_mean = self.df[col].mean()
+                col_std = self.df[col].std()
+
+                # Calculate lower and upper bounds
+                lower_bound = col_mean - 3 * col_std
+                upper_bound = col_mean + 3 * col_std
+
+                # Cap outliers
+                self.df[col] = self.df[col].clip(lower_bound, upper_bound)
         return self.df
