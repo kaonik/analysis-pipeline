@@ -93,3 +93,17 @@ class DataCleaner:
         for col, outliers_in_col in outliers.items():
             print(f'Outliers in {col}:')
             print(outliers_in_col)
+
+    def remove_outliers_iqr(self, columns):
+        """Remove outliers in specified columns using IQR method"""
+        for col in columns:
+            lower_bound, upper_bound = self._calculate_iqr_bounds(col)
+            self.df = self.df[(self.df[col] >= lower_bound) & (self.df[col] <= upper_bound)]
+        return self.df
+    
+    def cap_outliers_iqr(self, columns):
+        """Cap outliers in specified columns using IQR method"""
+        for col in columns:
+            lower_bound, upper_bound = self._calculate_iqr_bounds(col)
+            self.df[col] = self.df[col].clip(lower_bound, upper_bound)
+        return self.df
