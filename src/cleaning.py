@@ -50,3 +50,23 @@ class DataCleaner:
         return self.df
 
     
+    # --- Data Type Conversions ---
+    def convert_to_datetime(self, columns):
+        """Convert columns to datetime format"""
+        for col in columns:
+            self.df[col] = pd.to_datetime(self.df[col], errors='coerce')
+        return self.df
+    
+    def convert_to_numeric(self, columns):
+        """Convert columns to numeric format"""
+        for col in columns:
+            self.df[col] = pd.to_numeric(self.df[col], errors='coerce')
+        return self.df
+    
+    def convert_to_categorical(self, columns):
+        """Convert columns to categorical format"""
+        for col in columns:
+            self.df[col] = self.df[col].astype('category')
+        return self.df
+    
+    
