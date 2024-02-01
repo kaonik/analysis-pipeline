@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+from sklearn.preprocessing import StandardScaler, MinMaxScaler
 
 class DataCleaner:
     def __init__(self, df):
@@ -156,4 +157,35 @@ class DataCleaner:
                 lower_bound = col_mean - 3 * col_std
                 upper_bound = col_mean + 3 * col_std
                 self.df[col] = self.df[col].clip(lower_bound, upper_bound)
+        return self.df
+    
+    # --- Transformations ---
+    def normalize_data(self, columns):
+        """Normalize specified columns to a range between 0 and 1 using Min-Max scaling"""
+        scaler = MinMaxScaler()
+        self.df[columns] = scaler.fit_transform(self.df[columns])
+        return self.df
+    
+    def standardize_data(self, columns):
+        """Standardize specified columns to have a mean of 0 and standard deviation of 1"""
+        scaler = StandardScaler()
+        self.df[columns] = scaler.fit_transform(self.df[columns])
+        return self.df
+    
+    def log_transform(self, columns):
+        """Apply log transformation to specified columns"""
+        for col in columns:
+            self.df[col] = np.log1p(self.df[col])
+        return self.df
+    
+    def sqrt_transform(self, columns):
+        """Apply square root transformation to specified columns"""
+        for col in columns:
+            self.df[col] = np.sqrt(self.df[col])
+        return self.df
+    
+    def cbrt_transform(self, columns):
+        """Apply cube root transformation to specified columns"""
+        for col in columns:
+            self.df[col] = np.cbrt(self.df[col])
         return self.df
