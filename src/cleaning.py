@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from sklearn.preprocessing import StandardScaler, MinMaxScaler
+from sklearn.preprocessing import StandardScaler, MinMaxScaler, OneHotEncoder, LabelEncoder
 
 class DataCleaner:
     def __init__(self, df):
@@ -188,4 +188,14 @@ class DataCleaner:
         """Apply cube root transformation to specified columns"""
         for col in columns:
             self.df[col] = np.cbrt(self.df[col])
+        return self.df
+    
+    # --- Encoding ---
+    def one_hot_encode(self, columns):
+        '''One-hot encode columns with sklearn's OneHotEncoder'''
+        encoder = OneHotEncoder(sparse=False, handle_unknown='ignore')
+        for col in columns:
+            encoded = encoder.fit_transform(self.df[col])
+            for i, category in enumerate(encoder.categories_[0]):
+                self.df[f'{col}_{category}'] = encoded[:, i]
         return self.df
