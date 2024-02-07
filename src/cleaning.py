@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 from sklearn.preprocessing import StandardScaler, MinMaxScaler, OneHotEncoder, LabelEncoder
+from category_encoders import BinaryEncoder
 
 class DataCleaner:
     def __init__(self, df):
@@ -199,3 +200,25 @@ class DataCleaner:
             for i, category in enumerate(encoder.categories_[0]):
                 self.df[f'{col}_{category}'] = encoded[:, i]
         return self.df
+    
+    def label_encode(self, columns):
+        '''Label encode columns with sklearn's LabelEncoder'''
+        encoder = LabelEncoder()
+        for col in columns:
+            self.df[col] = encoder.fit_transform(self.df[col])
+        return self.df
+    
+    def frequency_encode(self, columns):
+        '''Encode categorical columns based on frequency of occurrence'''
+        for col in columns:
+            freq = self.df[col].value_counts(normalize=True)
+            self.df[f'{col}_freq'] = self.df[col].map(freq)
+        return self.df
+    
+    def binary_encode(self, columns):
+        '''Binary encode categorical columns using BinaryEncoder'''
+        encoder = BinaryEncoder(cols=columns)
+        self.df = encoder.fit_transform(self.df)
+        return self.df
+    
+    
